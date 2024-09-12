@@ -38,7 +38,7 @@ nav ul li a:hover {
 
 /* Cover Section */
 .cover {
-    background: url('img/cover.jpg') no-repeat center center/cover;
+    background: url('https://scr0vp.github.io/img/cover.jpg') no-repeat center center/cover;
     height: 100vh;
     display: flex;
     align-items: center;
