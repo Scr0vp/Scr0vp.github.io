@@ -7,6 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Web Stack Developer Portfolio</title>
     <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
 </head>
 
 <body>
@@ -25,7 +26,7 @@
     <section id="home" class="cover">
         <div class="cover-content">
             <h1>Web Stack Developer Portfolio</h1>
-            <p>Your gateway to modern web development.</p>
+            <p>Building the future of the web with innovative solutions.</p>
             <button onclick="window.location.href='https://your-deployed-project.com'">Visit Deployed Application</button>
         </div>
     </section>
@@ -33,33 +34,45 @@
     <!-- Features Section -->
     <section id="features" class="features">
         <h2>Key Features</h2>
-        <div class="feature">
-            <img src="feature1.png" alt="Feature 1">
-            <h3>Responsive Design</h3>
-            <p>Ensuring compatibility across all devices with dynamic design elements.</p>
-        </div>
-        <div class="feature">
-            <img src="feature2.png" alt="Feature 2">
-            <h3>Advanced Animations</h3>
-            <p>Smooth and engaging animations to enhance user experience.</p>
-        </div>
-        <div class="feature">
-            <img src="feature3.png" alt="Feature 3">
-            <h3>API Integrations</h3>
-            <p>Seamlessly integrated APIs for real-time data and functionality.</p>
+        <div class="feature-grid">
+            <div class="feature">
+                <img src="feature1.png" alt="Responsive Design">
+                <h3>Responsive Design</h3>
+                <p>Ensures compatibility across all devices with dynamic and adaptive layouts.</p>
+            </div>
+            <div class="feature">
+                <img src="feature2.png" alt="Advanced Animations">
+                <h3>Advanced Animations</h3>
+                <p>Engages users with smooth transitions and interactive elements.</p>
+            </div>
+            <div class="feature">
+                <img src="feature3.png" alt="API Integrations">
+                <h3>API Integrations</h3>
+                <p>Seamlessly integrates external APIs for real-time data and enhanced functionality.</p>
+            </div>
         </div>
     </section>
 
     <!-- About Section -->
     <section id="about" class="about">
         <h2>About the Project</h2>
-        <p>This project was inspired by my journey as a developer, combining passion for design with technical expertise to create dynamic and user-friendly web applications. It is a Portfolio Project for Holberton School.</p>
-        <p>For more information, visit the <a href="https://github.com/your-repository">GitHub repository</a>.</p>
+        <p>This project represents my passion for building efficient, scalable, and user-friendly web applications. It is a culmination of my experience and learning as part of the Holberton School curriculum.</p>
+        <p>For more information, check out the <a href="https://github.com/your-repository">GitHub repository</a>.</p>
         <h3>Meet the Team</h3>
-        <ul>
-            <li>John Doe - <a href="https://linkedin.com">LinkedIn</a> | <a href="https://github.com">GitHub</a> | <a href="https://twitter.com">Twitter</a></li>
-            <li>Jane Smith - <a href="https://linkedin.com">LinkedIn</a> | <a href="https://github.com">GitHub</a> | <a href="https://twitter.com">Twitter</a></li>
-        </ul>
+        <div class="team">
+            <div class="team-member">
+                <p>John Doe</p>
+                <a href="https://linkedin.com">LinkedIn</a> |
+                <a href="https://github.com">GitHub</a> |
+                <a href="https://twitter.com">Twitter</a>
+            </div>
+            <div class="team-member">
+                <p>Jane Smith</p>
+                <a href="https://linkedin.com">LinkedIn</a> |
+                <a href="https://github.com">GitHub</a> |
+                <a href="https://twitter.com">Twitter</a>
+            </div>
+        </div>
     </section>
 
     <script src="script.js"></script>
