@@ -1,17 +1,21 @@
+Here's an updated `README.md` file that includes the installation for **Scr0vp.github.io**:
+
+---
+
 # Udriver
 
 ## Introduction
 
 **Udriver** is a web-based application that allows users to book drivers for various travel needs. The platform connects users with available drivers in real-time, ensuring a seamless experience for scheduling pickups and drop-offs. The app integrates with Google Maps API for accurate location tracking and distance calculations, and provides an easy-to-use interface for both users and drivers.
 
-### **Live Site**: [Visit Udriver](https://Scr0vp.github.io)  
-*Link to the deployed site once it's available.*
+### **Live Site**: [Visit Udriver](https://scr0vp.github.io)  
+*Link to the deployed site.*
 
 ### **Final Project Blog Article**: [Read the Project Blog](#)  
 *Insert the link to your blog article that explains the development process of Udriver.*
 
 ### **Author**:  
-- **LinkedIn**: [[Your LinkedIn Profile](https://www.linkedin.com/in/housam-mosta/)](#)
+- **LinkedIn**: [Your LinkedIn Profile](https://www.linkedin.com/in/housam-mosta/)
 
 ---
 
@@ -28,12 +32,12 @@
 
 1. **Clone the Repository**
    ```bash
-   git clone https://github.com/your-username/udriver.git
+   git clone https://github.com/Scr0vp/Scr0vp.github.io.git
    ```
 
 2. **Navigate to the Project Directory**
    ```bash
-   cd udriver
+   cd Scr0vp.github.io
    ```
 
 3. **Install PHP Dependencies**
@@ -56,6 +60,11 @@
    ```bash
    php -S localhost:8000
    ```
+
+7. **View on GitHub Pages**  
+   You can also deploy and view the project on GitHub Pages:
+   - Push your changes to the `main` branch of the repository.
+   - Go to your repository settings and enable GitHub Pages under the **Pages** tab.
 
 ---
 
@@ -97,4 +106,4 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ---
 
-Feel free to modify the content where necessary, especially when the links to the deployed site and blog are ready. Let me know if you'd like further customization!
+This updated `README.md` file now includes the installation process for **Scr0vp.github.io** as the repository name. You can adjust the deployment links and settings as needed!
