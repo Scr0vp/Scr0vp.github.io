@@ -1,0 +1,24 @@
+/* Style for WhatsApp button */
+.whatsapp-button {
+    position: fixed;
+    bottom: 20px; /* Adjust the distance from the bottom */
+    right: 20px; /* Adjust the distance from the right */
+    z-index: 1000; /* Ensure it's above other elements */
+}
+
+.whatsapp-button a {
+    display: block;
+    width: 60px; /* Adjust button width */
+    height: 60px; /* Adjust button height */
+    background-color: green; /* Button background color */
+    border-radius: 50%; /* Make it a circle */
+    text-align: center;
+    line-height: 60px; /* Center the icon vertically */
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5); /* Optional: Add a shadow */
+}
+
+.whatsapp-button a img {
+    width: 60px; /* Adjust icon size */
+    height: 60px; /* Adjust icon size */
+    vertical-align: middle;
+}

@@ -1,0 +1,1071 @@
+
+<!DOCTYPE html>
+<html lang="fr" class="h-100">
+    
+  <head>
+      <title> TAXI VAN PARIS 7 PLACE ILE DE FRANCE </title>
+      <meta name="description" content="Discover reliable and efficient taxi van services for your transportation needs. Our professional team offers comfortable and spacious vans for group travel, airport transfers, city tours, and more. Book a taxi van with ease, providing convenience and comfort throughout your journey. Contact us today for safe and affordable van taxi services.">
+      <meta name="keywords" content="taxi Carrières-sous-Poissy, taxi Villepreux, taxi Noisy-le-Roi, taxi Feucherolles, taxi Aubergenville, taxi Septeuil, taxi Magnanville, taxi Marcq, taxi Vélizy-Villacoublay, taxi Saint-Arnoult-en-Yvelines, taxi van, taxi van paris, cab taxi, taxi paris, taxi bébé paris, taxi 7 places, réserver taxi paris">
+
+    <link rel="stylesheet" href="styles.css">
+    <meta
+      charset="UTF-8"
+      name="viewport"
+      content="width=device-width, initial-scale=1"
+    />
+
+    <link rel="icon" href="/images/logo.ico" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css"
+      media="all"
+    />
+
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3"
+      crossorigin="anonymous"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.2/font/bootstrap-icons.css"
+    />
+
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBskLvQ-yTo2b0FMmELzEQTc5Y5rHwKuVI&libraries=places"></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"
+      integrity="sha384-7+zCNj/IqJ95wo16oMtfsKbZ9ccEh31eOz1HGyDuCQ6wgnyJNSYdrPa03rtR1zdB"
+      crossorigin="anonymous"
+      defer
+    ></script>
+    <script
+      src="https://code.jquery.com/jquery-3.6.0.min.js"
+      integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js"
+      integrity="sha384-QJHtvGhmr9XOIpI6YVutG+2QOK9T+ZnN4kzFN1RtK3zEFEIsxhlmWl5/YESvpZ13"
+      crossorigin="anonymous"
+    ></script>
+
+    
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+
+    
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/css/intlTelInput.css"
+    />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/intlTelInput.min.js"></script>
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" defer></script>
+    <script defer>
+  $(document).ready(function () {
+    var input = document.querySelector("#courses_numero");
+    window.intlTelInput(input, {
+    initialCountry: "FR",
+    utilsScript:
+    "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js",
+        });
+    var btnNow = $("#btnNow");
+    var btnLater = $("#btnLater");
+    var collapse = document.getElementById("date");
+
+    btnNow.on("click", function () {
+      collapse.style.display = "none";
+    });
+
+    btnLater.on("click", function () {
+      collapse.style.display = "block";
+    });
+    
+    
+    var completionDepart = new google.maps.places.Autocomplete(
+      document.getElementById("courses_depart"), {
+        componentRestrictions: {
+          country: ["FR"],
+        },
+        fields: ['formatted_address'],
+        strictBounds: false,
+      }
+    );
+
+    var completionArrive = new google.maps.places.Autocomplete(
+      document.getElementById("courses_arrivee"), {
+        componentRestrictions: {
+          country: ["FR"],
+        },
+        fields: ['formatted_address'],
+        strictBounds: false,
+      }
+    );
+
+    document.getElementById("form_reservation").addEventListener("submit", async function (event) {
+      event.preventDefault();
+
+      const depart = document.getElementById("courses_depart").value;
+      const arrivee = document.getElementById("courses_arrivee").value;
+      const numero = document.getElementById("courses_numero").value;
+      const dateDepart = document.getElementById("courses_date_depart").value;
+      const heureDepart = document.getElementById("courses_heure_depart").value;
+      
+      //captcha validation 
+      var response = grecaptcha.getResponse(); // Get the reCAPTCHA response
+      if (response.length === 0) { // Check if response is empty
+        // If the reCAPTCHA is not checked, show an error message or handle accordingly
+        alert("Please complete the reCAPTCHA!");
+        return false; // Prevent form submission
+      }
+      
+      
+      let reservationDate = "";
+
+      try {
+        reservationDate = new Date(dateDepart + " " + heureDepart).toLocaleString("fr-FR", {
+          timeZone: "Europe/Paris"
+        });
+        var parts = reservationDate.split(" ");
+        var dateParts = parts[0].split("/");
+        var timeParts = parts[1].split(":");
+        var formattedDate = new Date(
+          dateParts[2],
+          dateParts[1] - 1,
+          dateParts[0],
+          timeParts[0],
+          timeParts[1],
+          timeParts[2]
+        );
+      } catch (err) {
+        alert("Insérez une date de réservation valide");
+      }
+
+      const formData = {
+        type: "BOOKING",
+        customer_phone: numero,
+        departure_address: depart,
+        arrival_address: arrivee,
+        departure_date: reservationDate,
+        car_type: "ECO",
+        nbr_persons: 1,
+        baggage: 0,
+        options: "true",
+        customer_note: "",
+        payment_method: "CB",
+        humanKey: 'token',
+      };
+
+      try {
+          
+        const response = await fetch("/process_booking.php", {
+                method: "POST",
+                headers: {
+            "Content-Type": "application/json",
+                },
+                body: JSON.stringify(formData), // Assuming formData contains the form data
+    }).then(response => response.text())
+  .then(data => console.log(data))
+        loadingOverlay.style.display = "none";
+        const successPopup = document.getElementById("successPopup");
+        successPopup.style.display = "block";
+
+        let dateerr = await response.json();
+
+        if (dateerr === "date") {
+          alert("Insérez une date de réservation valide");
+        } else if (response.status === 400) {
+          alert("Insérez un numéro téléphone valide");
+        }
+
+        if (response.ok) {
+          const successPopup = document.getElementById("successPopup");
+          successPopup.style.display = "block";
+          document.getElementById("courses_depart").value = "";
+          document.getElementById("courses_arrivee").value = "";
+          document.getElementById("courses_numero").value = "";
+        }
+      } catch (error) {
+        console.error("Fetch error:", error);
+      }
+    });
+
+    document.getElementById("closePopup").addEventListener("click", function () {
+      successPopup.style.display = "none";
+    });
+  });
+</script>
+<script defer>
+    function makeCall(phoneNumber) {
+        var formattedPhoneNumber = phoneNumber.replace('tel:', '');
+        window.location.href = 'tel:' + encodeURIComponent(formattedPhoneNumber);
+    }
+</script>
+
+  </head>
+
+  <body class="d-flex flex-column h-100">
+<!--      <div class="whatsapp-button">-->
+<!--    <a href="https://wa.me/+33651885745" target="_blank" rel="noopener noreferrer">-->
+<!--        <img src="images/whatsapp-icon.webp" alt="WhatsApp Icon">-->
+<!--    </a>-->
+<!--</div>-->
+    <style>
+      .navbar a.navbar-brand {
+        padding: 0rem;
+      }
+
+      li:hover {
+        border-bottom: 2px solid red;
+      }
+
+      .popup {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.7);
+        z-index: 1000;
+      }
+
+      .popup-content {
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 10px;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        text-align: center;
+      }
+
+      #closePopup {
+        background-color: red;
+        color: #fff;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+
+      .overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: 9999;
+      }
+
+      .spinner {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        border: 4px solid rgba(255, 255, 255, 0.3);
+        border-radius: 50%;
+        border-top: 4px solid #3498db;
+        width: 40px;
+        height: 40px;
+        animation: spin 1s linear infinite;
+      }
+
+      nav > img {
+        margin: 1em;
+        margin-left: 3em;
+        width: 11rem;
+      }
+      
+      .iti {
+        z-index: 999;
+        position: relative !important;
+        flex: 1 1 auto !important;
+        width: 1% !important;
+        min-width: 0 !important;
+      }
+
+      #courses_numero {
+        height: 100%;
+      }
+      
+@media (min-width: 600px) {
+  #jumbotron-bg {
+    background-image: url('/images/Suisse.webp');
+  }
+}
+
+@media (min-width: 1200px) {
+  #jumbotron-bg {
+    background-image: url('/images/Suisse.webp');
+  }
+}
+
+      @media (max-width: 600px) {
+        #creer {
+          margin-top: 0.7rem;
+        }
+
+        #connexion {
+          margin-top: 0.7rem;
+        }
+
+        nav {
+          display: flex !important;
+          align-items: center !important;
+          justify-content: center !important;
+        }
+
+        nav > img {
+          width: 160px;
+          margin-left: 0;
+        }
+      }
+      
+
+      @keyframes spin {
+        0% {
+          transform: translate(-50%, -50%) rotate(0deg);
+        }
+        100% {
+          transform: translate(-50%, -50%) rotate(360deg);
+        }
+      }
+    </style>
+
+    <nav
+      class="navbar navbar-expand-sm navbar-dark bg-dark p-0"
+      aria-label="navbar"
+    >
+      <img src="/images/logo.webp" alt="logo" width= "200" height= "90" />
+      <div class="container mt-2">
+        <!--<img-->
+        <!--  style="margin-right: 1rem"-->
+        <!--  width="35px"-->
+        <!--  height="35px"-->
+        <!--  src="/images/numberWhite.png"-->
+        <!--  alt="number icone"-->
+        <!--/>-->
+                  <button style="background-color: transparent; color: initial; border: none;" onclick="makeCall('+33176508588')">
+    <a class="navbar-brand fs-2 fw-bold">01 76 50 85 88</a>
+</button>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNav"
+          aria-controls="navbarNav"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="text-end collapse navbar-collapse" id="navbar">
+          <ul class="navbar-nav ms-auto">
+            <a class="btn btn-dark border border-white mb-1 mx-3" id="connexion"
+              >Créer un compte</a
+            >
+            <a class="btn btn-danger border border-white mb-1" id="connexion"
+              >Se connecter</a
+            >
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+      <div class="container-fluid">
+        <div
+          class="collapse navbar-collapse border-top border-white"
+          id="navbarNav"
+        >
+          <ul class="navbar-nav mx-auto">
+            <li class="nav-item">
+              <a class="nav-link text-white text-uppercase border-0" href="/"
+                >Accueil</a
+              >
+            </li>
+            <li class="nav-item">
+              <a class="nav-link text-white text-uppercase border-0" href="/"
+                >Réservez</a
+              >
+            </li>
+            <li class="nav-item">
+              <a class="nav-link text-uppercase text-white" href="/tarifs"
+                >Nos tarifs</a
+              >
+            </li>
+            <li class="nav-item">
+              <a class="nav-link text-uppercase text-white" href="/contact"
+                >Contact</a
+              >
+            </li>
+            <li class="nav-item">
+              <a class="nav-link text-uppercase text-white" href="/legal"
+                >CGU - Mentions légales</a
+              >
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+    <style>
+      #jumbotron-bg {
+        background-image: url("/images/cover.webp");
+        background-size: cover;
+        background-position: center center;
+        background-repeat: no-repeat;
+        background-size: 1920px;
+      }
+
+      #jumbotron-bg.collapsing {
+        transition: none;
+      }
+
+      #courses_numero::placeholder,
+      #courses_depart::placeholder,
+      #courses_arrivee::placeholder {
+        font-family: LatoWebHeavy;
+      }
+
+      #courses_numero:focus,
+      #courses_depart:focus,
+      #courses_arrivee:focus {
+        border: 1px solid #0d6efd;
+        outline: none;
+        box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+      }
+
+      #redTitle::before {
+        width: 30px;
+        margin: 18px 0 0 -36px;
+      }
+
+      #map {
+        width: 250px;
+        height: 500px;
+      }
+
+      @media (max-width: 600px) {
+        #labelFooter {
+          text-align: center;
+          margin-bottom: 1rem;
+        }
+
+        #btnNow,
+        #btnLater {
+          font-size: 0.6rem;
+        }
+
+        #btnBook {
+          font-size: 1.3rem;
+          font-family: fangsong;
+        }
+
+        #btnCall {
+          font-size: 1.3rem;
+          font-family: fangsong;
+        }
+
+        #msgSucces {
+          font-size: 0.9rem;
+        }
+
+        #phrase {
+          font-size: 0.6rem;
+          padding: 0.08rem;
+        }
+      }
+      #courses_depart::placeholder {
+          color: #3b3636;
+          font-family: LatoWebHeavy;
+      }
+      #courses_arrivee::placeholder {
+          color: #3b3636;
+          font-family: LatoWebHeavy;
+      }
+      #courses_numero::placeholder {
+          color: #3b3636;
+          font-family: LatoWebHeavy;
+      }
+      
+      @media only screen and (max-width: 767px) {
+          .pac-container, .pac-item {
+    width: 90vw !important;;
+}
+
+    .pac-container {
+        translate: -30.8vw
+    }
+}
+      
+      
+    </style>
+
+    <!-- Affichage du message de succès de la réservation -->
+
+    <div
+      class="jumbotron bg-transparent"
+      id="jumbotron-bg"
+      style="padding-top: 2rem; margin-bottom: 2rem; padding-top: 8rem; padding-bottom: 8rem"
+    >
+      <div class="container mb-8">
+        <form name="courses" method="post" id="form_reservation" action="process_booking.php">
+          <div class="row">
+            <div class="col-md-12">
+              <!-- Champ départ -->
+              <div class="row">
+                <div class="col-md-6 mb-3 mx-auto">
+                  <div class="input-group">
+                    <span
+                      class="input-group-text fw-bold p-3 border-0"
+                      style="background-color: rgb(230, 230, 230, 0.9); height: 50px"
+                      >Départ :</span
+                    >
+                    <input
+                    type="text"
+                    id="courses_depart"
+                    name="courses[depart]"
+                    required="required"
+                    placeholder="Departure Address (e.g., Station, Airport)"
+                    font-color
+                    style="background-color: rgb(230, 230, 230, 0.9); height: 50px; color: black"
+                    class="border-0 form-control"
+                    />
+                    <span
+                      class="input-group-text p-3 border-0"
+                      style="background-color: rgb(230, 230, 230, 0.9); height: 50px"
+                      id="basic-addon1"
+                    >
+
+                      <svg
+                        width="28px"
+                        height="28px"
+                        viewBox="0 0 1024 1024"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          fill="#000000"
+                          d="M800 416a288 288 0 1 0-576 0c0 118.144 94.528 272.128 288 456.576C705.472 688.128 800 534.144 800 416zM512 960C277.312 746.688 160 565.312 160 416a352 352 0 0 1 704 0c0 149.312-117.312 330.688-352 544z"
+                        />
+                        <path
+                          fill="#000000"
+                          d="M512 448a64 64 0 1 0 0-128 64 64 0 0 0 0 128zm0 64a128 128 0 1 1 0-256 128 128 0 0 1 0 256zm345.6 192L960 960H672v-64H352v64H64l102.4-256h691.2zm-68.928 0H235.328l-76.8 192h706.944l-76.8-192z"
+                        />
+                      </svg>
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Champ arrivée -->
+              <div class="row">
+                <div class="col-md-6 mb-3 mx-auto">
+                  <div class="input-group">
+                    <span
+                      class="input-group-text fw-bold p-3 border-0"
+                      style="background-color: rgb(230, 230, 230,0.9); height: 50px"
+                      >Arrivee :</span
+                    >
+                    <input
+                    type="text"
+                    id="courses_arrivee"
+                    name="courses[arrivee]"
+                    required="required"
+                    placeholder="Destination Address (for estimation, optional)"
+                    style="background-color: rgb(230, 230, 230, 0.9); height: 50px"
+                    class="border-0 form-control"
+                    />
+                    <span
+                      class="input-group-text p-3 border-0"
+                      style="background-color: rgb(230, 230, 230, 0.9); height: 50px"
+                      id="basic-addon1"
+                    >
+                      <img
+                        width="35"
+                        height="35"
+                        src="https://img.icons8.com/wired/64/point-objects.png"
+                        alt="point-objects"
+                      />
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Champ numéro -->
+              <div class="row">
+                <div class="col-md-6 mx-auto">
+                  <div class="row">
+                    <div class="input-group mb-3">
+                      <span
+                        class="input-group-text fw-bold p-3 border-0"
+                        style="background-color: rgb(230, 230, 230, 0.9); height: 50px"
+                        >Numéro :</span
+                      >
+                      <input
+                      type="tel"
+                      id="courses_numero"
+                      name="courses[numero]"
+                      required="required"
+                      placeholder="Phone Number"
+                      style="background-color: rgb(230, 230, 230, 0.9); height: 50px"
+                      class="border-0 form-control"
+                      />
+                      <span
+                        class="input-group-text p-3 border-0"
+                        style="background-color: rgb(230, 230, 230, 0.9); height: 50px"
+                        id="basic-addon1"
+                      >
+
+                        <svg
+                          height="28px"
+                          width="28px"
+                          version="1.1"
+                          id="_x32_"
+                          xmlns="http://www.w3.org/2000/svg"
+                          xmlns:xlink="http://www.w3.org/1999/xlink"
+                          viewBox="0 0 512 512"
+                          xml:space="preserve"
+                        >
+                          <style type="text/css">
+                            .st0 {
+                              fill: #000000;
+                            }
+                          </style>
+                          <g>
+                            <path
+                              class="st0"
+                              d="M502.79,100.977c-1.273-2.76-4.918-5.406-7.424-7.262c-0.054-0.081-0.121-0.161-0.174-0.235
+                                                          c0.054,0.067,0.094,0.141,0.148,0.207c-2.962-2.191-6.7-3.671-11.136-4.14L313.428,71.329c-15.397-1.649-33.126,9.139-39.491,23.96
+                                                          L146.633,392.463c-2.64,6.138-2.882,12.054-1.193,16.985c0.523,14.197,13.776,25.159,26.761,26.546
+                                                          c2.238,0.241,4.476,0.476,6.714,0.717c12.516,1.334,25.019,2.667,37.522,4.007c33.956,3.618,67.9,7.236,101.843,10.868
+                                                          c17.609,1.876,34.815,5.802,49.917-4.563c16.751-11.464,24.095-30.412,34.305-55.425c38.285-93.816,65.1-160.168,104.993-253.248
+                                                          c2.251-5.28,4.623-10.432,4.502-16.449c0-0.007,0,0,0-0.007C511.714,113.995,508.083,107.335,502.79,100.977z M269.997,398.353
+                                                          c-3.109,6.814-11.712,11.74-19.149,10.982c-7.424-0.751-10.934-6.895-7.826-13.708c3.096-6.794,11.645-11.726,19.069-10.969
+                                                          C269.514,385.401,273.08,391.566,269.997,398.353z M365.421,368.316l-172.008-18.352l104.216-243.152l171.994,18.359
+                                                          L365.421,368.316z"
+                            />
+                            <path
+                              class="st0"
+                              d="M78.478,71.744L65.534,58.102c-25.984,24.61-46.084,56.168-56.926,92.866
+                                                          c-10.855,36.73-11.096,74.104-2.68,108.892l18.278-4.449c-7.665-31.692-7.438-65.648,2.452-99.11
+                                                          C36.534,122.86,54.813,94.183,78.478,71.744z"
+                            />
+                            <path
+                              class="st0"
+                              d="M76.575,171.055c-7.973,27.029-8.16,54.573-1.956,80.215l18.278-4.462c-5.44-22.553-5.28-46.68,1.729-70.426
+                                                          c7.022-23.766,20.007-44.128,36.838-60.068l-12.945-13.669C99.382,120.776,84.575,143.999,76.575,171.055z"
+                            />
+                            <path
+                              class="st0"
+                              d="M162.606,196.461c4.154-14.07,11.873-26.07,21.882-35.578l-12.945-13.655
+                                                      c-12.261,11.638-21.842,26.505-26.975,43.9c-5.132,17.38-5.186,35.082-1.206,51.498l18.278-4.442
+                                                      C158.412,224.784,158.452,210.519,162.606,196.461z"
+                            />
+                          </g>
+                        </svg>
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Champ quand -->
+              <div class="row">
+                <div class="col-md-6 mb-2 mx-auto">
+                  <div class="input-group">
+                    <div
+                      class="d-flex gap-1 flex-fill p-3 text-center mx-auto rounded-1"
+                      style="background-color: rgb(230, 230, 230, 0.9)"
+                    >
+                      <span
+                        class="input-group-text fw-bold border-0 p-1"
+                        style="background-color: rgb(230, 230, 230, 0.9)"
+                        >Quand :</span
+                      >
+                      <button
+                        class="btn btn-sm btn-outline-secondary flex-fill active"
+                        type="button"
+                        id="btnNow"
+                      >
+                        Maintenant
+                      </button>
+                      <button
+                        class="btn btn-sm btn-light flex-fill"
+                        type="button"
+                        data-bs-toggle="collapse"
+                        data-bs-target="#date"
+                        aria-expanded="false"
+                        aria-controls="date"
+                        id="btnLater"
+                        background-color:"#FF8C00"
+                      >
+                        Plus tard
+                      </button>
+                      <span
+                        class="input-group-text border-0"
+                        style="background-color: rgb(230, 230, 230, 0.9)"
+                        id="basic-addon1"
+                      >
+                        <svg
+                          class="ml-2"
+                          fill="#00000"
+                          width="28px"
+                          height="28px"
+                          viewBox="0 0 100.353 100.353"
+                          id="Layer_1"
+                          version="1.1"
+                          xml:space="preserve"
+                          xmlns="http://www.w3.org/2000/svg"
+                          xmlns:xlink="http://www.w3.org/1999/xlink"
+                        >
+                          <g>
+                            <path
+                              d="M32.286,42.441h-9.762c-0.829,0-1.5,0.671-1.5,1.5v9.762c0,0.828,0.671,1.5,1.5,1.5h9.762c0.829,0,1.5-0.672,1.5-1.5   v-9.762C33.786,43.113,33.115,42.441,32.286,42.441z M30.786,52.203h-6.762v-6.762h6.762V52.203z"
+                            />
+
+                            <path
+                              d="M55.054,42.441h-9.762c-0.829,0-1.5,0.671-1.5,1.5v9.762c0,0.828,0.671,1.5,1.5,1.5h9.762c0.828,0,1.5-0.672,1.5-1.5   v-9.762C56.554,43.113,55.882,42.441,55.054,42.441z M53.554,52.203h-6.762v-6.762h6.762V52.203z"
+                            />
+
+                            <path
+                              d="M77.12,42.441h-9.762c-0.828,0-1.5,0.671-1.5,1.5v9.762c0,0.828,0.672,1.5,1.5,1.5h9.762c0.828,0,1.5-0.672,1.5-1.5v-9.762   C78.62,43.113,77.948,42.441,77.12,42.441z M75.62,52.203h-6.762v-6.762h6.762V52.203z"
+                            />
+
+                            <path
+                              d="M32.286,64.677h-9.762c-0.829,0-1.5,0.672-1.5,1.5v9.762c0,0.828,0.671,1.5,1.5,1.5h9.762c0.829,0,1.5-0.672,1.5-1.5   v-9.762C33.786,65.349,33.115,64.677,32.286,64.677z M30.786,74.439h-6.762v-6.762h6.762V74.439z"
+                            />
+
+                            <path
+                              d="M55.054,64.677h-9.762c-0.829,0-1.5,0.672-1.5,1.5v9.762c0,0.828,0.671,1.5,1.5,1.5h9.762c0.828,0,1.5-0.672,1.5-1.5   v-9.762C56.554,65.349,55.882,64.677,55.054,64.677z M53.554,74.439h-6.762v-6.762h6.762V74.439z"
+                            />
+
+                            <path
+                              d="M77.12,64.677h-9.762c-0.828,0-1.5,0.672-1.5,1.5v9.762c0,0.828,0.672,1.5,1.5,1.5h9.762c0.828,0,1.5-0.672,1.5-1.5v-9.762   C78.62,65.349,77.948,64.677,77.12,64.677z M75.62,74.439h-6.762v-6.762h6.762V74.439z"
+                            />
+
+                            <path
+                              d="M89,13.394h-9.907c-0.013,0-0.024,0.003-0.037,0.004V11.4c0-3.268-2.658-5.926-5.926-5.926s-5.926,2.659-5.926,5.926v1.994   H56.041V11.4c0-3.268-2.658-5.926-5.926-5.926s-5.926,2.659-5.926,5.926v1.994H33.025V11.4c0-3.268-2.658-5.926-5.926-5.926   s-5.926,2.659-5.926,5.926v1.995c-0.005,0-0.01-0.001-0.015-0.001h-9.905c-0.829,0-1.5,0.671-1.5,1.5V92.64   c0,0.828,0.671,1.5,1.5,1.5H89c0.828,0,1.5-0.672,1.5-1.5V14.894C90.5,14.065,89.828,13.394,89,13.394z M70.204,11.4   c0-1.614,1.312-2.926,2.926-2.926s2.926,1.312,2.926,2.926v8.277c0,1.613-1.312,2.926-2.926,2.926s-2.926-1.312-2.926-2.926V11.4z    M50.115,8.474c1.613,0,2.926,1.312,2.926,2.926v8.277c0,1.613-1.312,2.926-2.926,2.926c-1.614,0-2.926-1.312-2.926-2.926v-4.643   c0.004-0.047,0.014-0.092,0.014-0.141s-0.01-0.094-0.014-0.141V11.4C47.189,9.786,48.501,8.474,50.115,8.474z M24.173,11.4   c0-1.614,1.312-2.926,2.926-2.926c1.613,0,2.926,1.312,2.926,2.926v8.277c0,1.613-1.312,2.926-2.926,2.926   c-1.614,0-2.926-1.312-2.926-2.926V11.4z M87.5,91.14H12.753V16.394h8.405c0.005,0,0.01-0.001,0.015-0.001v3.285   c0,3.268,2.659,5.926,5.926,5.926s5.926-2.658,5.926-5.926v-3.283h11.164v3.283c0,3.268,2.659,5.926,5.926,5.926   s5.926-2.658,5.926-5.926v-3.283h11.163v3.283c0,3.268,2.658,5.926,5.926,5.926s5.926-2.658,5.926-5.926V16.39   c0.013,0,0.024,0.004,0.037,0.004H87.5V91.14z"
+                            />
+                          </g>
+                        </svg>
+                      </span>
+                    </div>
+                    <div class="col-md-12 collapse mx-auto mt-1" id="date">
+                      <div
+                        class="card card-body border-0"
+                        style="background-color: rgb(230, 230, 230, 0.9)"
+                      >
+                        <div class="row">
+                          <div class="col mb-1">
+                            <input
+                            type="date"
+                            id="courses_date_depart"
+                            name="courses[date_depart]"
+                            required="required"
+                            class="js-datepicker glyphicon glyphicon-envelope form-control"
+                            />
+                          </div>
+                          <div class="col">
+                            <input
+                              type="time"
+                              id="courses_heure_depart"
+                              name="courses[heure_depart]"
+                              required="required"
+                              class="form-control"
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Bloc phrase + boutons -->
+              <div class="col-md-6 mx-auto">
+                <p
+                  class="text-black fw-bold fsp-1 rounded-1"
+                  style="
+                    color: #000;
+                    background-color: #e6e6e6;
+                    text-align: center;
+                  "
+                  id="phrase"
+                >
+                  Après la validation, vous recevrez un appel de notre
+                  téléconseiller.
+                </p>
+                <div
+                  class="g-recaptcha"
+                  data-sitekey="6LepCaMpAAAAAGJl2xji-eb1oEky6c8pnOAsK2Eu"
+                  style="margin: auto; max-width: 305px"
+                  id="captcha"
+                ></div>
+                <div
+                  class="d-flex gap-1 flex-fill mt-2 p-1 text-center mx-auto"
+                >
+                    <button class="btn btn-outline-dark fw-bold flex-fill active" type="submit" id="btnBook" name="submit">
+    Estimer
+</button>
+
+                  <button class="btn btn-danger flex-fill fw-bold" type="button" id="btnCall" onclick="makeCall('tel:+33176508588')" style="background-color:rgba(255, 0, 0)">
+    <span class="d-flex align-items-center justify-content-center">
+        <i class="bi bi-telephone-fill me-2"></i>
+        <span>01 76 50 85 88</span>
+    </span>
+</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <div class="jumbotron" style="padding: 2rem 2rem; margin-bottom: 2rem">
+      <div class="container">
+        <div class="row mx-auto">
+          <div class="col-md-5 mb-4 mx-auto">
+            <h4 class="text-danger text-center" id="redTitle">
+              Commandez votre Taxi avec l’application
+            </h4>
+            <hr class="mx-auto" style="width: 50%" />
+            <div class="d-flex align-items-center mr-2">
+              <img
+                src="images/icon-commande.svg"
+                width="75"
+                height="65"
+                viewbox="0 0 60 60"
+                class="m-3"
+                alt="Mon SVG"
+              />
+              <h6 class="mb-0 ml-3 fw-bold">
+                Commande immédiate ou réservation à l’avance (jusqu’à 30 jours).
+              </h6>
+            </div>
+            <div class="d-flex align-items-center mr-2">
+              <img
+                src="images/icon-suivi.svg"
+                width="60"
+                height="60"
+                viewbox="0 0 60 60"
+                class="m-3"
+                alt="Mon SVG"
+              />
+              <h6 class="mb-0 ml-3 fw-bold">
+                Suivi de l’arrivée de votre taxi en temps réel.
+              </h6>
+            </div>
+            <div class="d-flex align-items-center mr-2">
+              <img
+                src="images/icon-paiment.svg"
+                width="60"
+                height="60"
+                viewbox="0 0 60 60"
+                class="m-3"
+                alt="Mon SVG"
+              />
+              <h6 class="mb-0 ml-3 fw-bold">
+                Paiement à bord du vehicule (en espèces ou carte bleu)
+              </h6>
+            </div>
+            <!--<div class="d-flex align-items-center mr-2">-->
+            <!--  <img-->
+            <!--    src="images/online-payment.png"-->
+            <!--    width="60"-->
+            <!--    height="60"-->
+            <!--    viewbox="0 0 60 60"-->
+            <!--    class="m-3"-->
+            <!--    alt="Mon SVG"-->
+            <!--  />-->
+            <!--  <h6 class="mb-0 ml-3 fw-bold">-->
+            <!--    L'application Connect : Prenez un Taxi dans la rue et payez-->
+            <!--    directement avec votre appli.-->
+            <!--  </h6>-->
+            <!--</div>-->
+          </div>
+          <div class="col-md-4 mx-auto" id="map">
+            <img
+              alt="Central 7 Taxi"
+              style="margin-right: 1rem"
+              data-cke-saved-src="/images/phone_map.jpg"
+              src="/images/phone_map.jpg"
+              id="map"
+            />
+            <div class="row mx-auto">
+              <div class="col-sm-5"></div>
+              <div class="col-sm-4 mt-3 d-flex justify-content-center gap-4">
+                <!--<a href="#">-->
+                  <!--<img-->
+                  <!--  alt="apple"-->
+                  <!--  data-cke-saved-src="/images/phone_map.jpg"-->
+                  <!--  src="/images/download-apple.svg"-->
+                  <!--  id="apple"-->
+                <!--/></a>-->
+                <!--<a href="#">-->
+                <!--  <img-->
+                <!--    alt="google"-->
+                <!--    data-cke-saved-src="/images/phone_map.jpg"-->
+                <!--    src="/images/download-google.svg"-->
+                <!--    id="google"-->
+                <!--/></a>-->
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <style>
+      #labelFooter {
+        text-align: right;
+      }
+
+      @media (max-width: 768px) {
+        #labelFooter {
+          text-align: center;
+          margin-top: 0.8rem;
+          margin-bottom: 1rem;
+        }
+      }
+    </style>
+
+    <footer class="footer mt-auto bg-light">
+      <div class="container">
+        <div class="row p-4">
+          <div class="col-sm-3 col-xs-12 text-center">
+            <img src="/images/social_url_facebook_black.png" alt="fb" />
+            <img src="/images/social_url_instagram_black.png" alt="ig" />
+            <img src="/images/social_url_linkedin_black.png" alt="lk" />
+            <img src="/images/social_url_twitter_black.webp" alt="tw" />
+            <img src="/images/social_url_viadeo_black.webp" alt="vi" />
+            <img src="/images/social_url_youtube_black.webp" alt="yt" />
+          </div>
+          <div class="col-sm-9 col-xs-12">
+            <div class="row">
+              <div class="col-sm-8" id="labelFooter">
+                <span
+                  for="homepage-social-container-newsletter"
+                  class="control-label p-2"
+                  >Recevez nos actus et bons plans</span
+                >
+              </div>
+              <div class="col-sm-4 text-start">
+                <div class="input-group input-group-sm">
+                  <input
+                    type="email"
+                    class="form-control"
+                    id="exampleInputEmail1"
+                    aria-describedby="emailHelp"
+                  />
+                  <a type="button" class="btn btn-danger">OK</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </footer>
+    <div id="successPopup" class="popup">
+      <div class="popup-content">
+        <p>
+          Votre réservation a été effectuée avec succès ! Nous vous remercions
+          pour votre confiance. Un de nos agents vous contactera bientôt pour
+          confirmer les détails de votre trajet
+        </p>
+        <button id="closePopup">Fermer</button>
+      </div>
+    </div>
+
+    <div class="overlay" id="loadingOverlay">
+      <div class="spinner"></div>
+    </div>
+
+    <script>
+      // Get the current date and time
+      const currentDate = new Date();
+
+      // Format the date as "mm/dd/yyyy"
+      const month = String(currentDate.getMonth() + 1).padStart(2, "0");
+      const day = String(currentDate.getDate()).padStart(2, "0");
+      const year = currentDate.getFullYear();
+      const formattedDate = `${year}-${month}-${day}`;
+
+      // Format the time as "hh:mm" in 24-hour format
+      const hours = String(currentDate.getHours()).padStart(2, "0");
+      const minutes = String(currentDate.getMinutes()).padStart(2, "0");
+      const formattedTime = `${hours}:${minutes}`;
+
+      // Set the values of the input fields
+      document.getElementById("courses_date_depart").value = formattedDate;
+      document.getElementById("courses_heure_depart").value = formattedTime;
+    </script>
+    
+<script>
+document.addEventListener('contextmenu', function(e) {
+  e.preventDefault();
+}, false);
+</script>
+<script>
+// Function to set a cookie with a specified name, value, and expiration date
+function setCookie(name, value, days) {
+    var expires = "";
+    if (days) {
+        var date = new Date();
+        date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+        expires = "; expires=" + date.toUTCString();
+    }
+    document.cookie = name + "=" + (value || "") + expires + "; path=/; SameSite=None; Secure";
+}
+
+// Function to get the value of a cookie by its name
+function getCookie(name) {
+    var nameEQ = name + "=";
+    var cookies = document.cookie.split(';');
+    for(var i = 0; i < cookies.length; i++) {
+        var cookie = cookies[i];
+        while (cookie.charAt(0) == ' ') {
+            cookie = cookie.substring(1, cookie.length);
+        }
+        if (cookie.indexOf(nameEQ) == 0) {
+            return cookie.substring(nameEQ.length, cookie.length);
+        }
+    }
+    return null;
+}
+
+// Function to handle form submission and save user preferences
+document.getElementById('form_reservation').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    // Get form values
+
+    var courses_depart = document.getElementById('courses_depart').value;
+    var arrivee = document.getElementById('courses_arrivee').value;
+    
+    // Save preferences as cookies
+
+    setCookie('courses_depart', courses_depart, 30);
+    setCookie('courses_arrivee', courses_arrivee, 30);
+    
+});
+
+// Function to check if the user has previously saved preferences and populate the form
+window.addEventListener('DOMContentLoaded', function() {
+
+    var courses_depart = getCookie('courses_depart');
+    var arrivee = getCookie('courses_arrive');
+    
+    if (courses_depart) document.getElementById('courses_depart').value = courses_depart;
+    if (arrivee) document.getElementById('courses_arrivee').value = courses_arrivee;
+});
+</script>
+
+  </body>
+</html>
